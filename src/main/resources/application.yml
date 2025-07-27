@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: Weather Stats
+  cache:
+    type: caffeine
+    cache-names: weather-stats
+    caffeine:
+      spec: maximumSize=1000,expireAfterAccess=3600s
+app:
+  weather-api:
+    base-url: https://api.weatherapi.com/v1
+    api-key: eb6d5b0db12844d8b5331916252707
+
+logging:
+  level:
+    root: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: caches

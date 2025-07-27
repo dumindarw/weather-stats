@@ -1,4 +1,4 @@
-package com.integrations.weather_stats;
+package com.integrations.weather;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
