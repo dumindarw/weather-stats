@@ -8,9 +8,8 @@ import com.integrations.weather.model.Error400;
 import com.integrations.weather.model.ForecastForecastday;
 import com.integrations.weather.model.InlineResponse2002;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -32,15 +31,13 @@ public class WeatherStatsService {
 
   private final ObjectMapper objectMapper;
 
-  @Autowired
-  CacheManager cacheManager;
-
   public WeatherStatsService(WeatherApiClient client, ObjectMapper mapper) {
     this.weatherApiClient = client;
     this.objectMapper = mapper;
   }
 
   @Async
+  @Cacheable(value = "history_cache", key = "#city")
   public CompletableFuture<ResponseEntity<String>> fetchWeatherData(String city) throws InterruptedException {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -96,9 +93,7 @@ public class WeatherStatsService {
         forecastForecastday.getDay().getAvgtempC().doubleValue()
     ).summaryStatistics();
 
-    DecimalFormat df = new DecimalFormat("0.00");
-
-    weatherSummery.setAverageTemperature(Double.parseDouble(df.format(statistics.getAverage())));
+    weatherSummery.setAverageTemperature(Double.parseDouble(new DecimalFormat("0.00").format(statistics.getAverage())));
 
     log.info("City : {}", city);
     log.info("Average Temperature: {}", statistics.getAverage());

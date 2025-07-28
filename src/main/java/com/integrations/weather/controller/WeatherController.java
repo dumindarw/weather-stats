@@ -22,19 +22,11 @@ public class WeatherController {
   }
 
   @GetMapping(value = "/weather", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<String> getWeatherSummeryByCity(@RequestParam String city) {
-
-    try {
-      CompletableFuture<ResponseEntity<String>> weatherData = this.weatherStatsService.fetchWeatherData(city);
-
-      return weatherData.join();
-    }
-    catch (InterruptedException ex) {
-
-      log.error("CompletionException");
-    }
-
-    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+  public CompletableFuture<ResponseEntity<String>> getWeatherSummeryByCity(@RequestParam String city) throws InterruptedException {
+    return this.weatherStatsService.fetchWeatherData(city)
+        .exceptionally(ex -> {
+          log.error("Error fetching weather data", ex);
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching weather data");
+        });
   }
 }

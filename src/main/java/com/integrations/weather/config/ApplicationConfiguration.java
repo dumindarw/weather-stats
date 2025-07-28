@@ -50,6 +50,7 @@ public class ApplicationConfiguration {
   @Bean
   public CacheManager cacheManager() {
     CaffeineCacheManager cacheManager = new CaffeineCacheManager("history_cache");
+    cacheManager.setAsyncCacheMode(true);
     cacheManager.setCaffeine(this.caffeineCacheBuilder());
     return cacheManager;
   }
@@ -58,6 +59,6 @@ public class ApplicationConfiguration {
     return Caffeine.newBuilder()
         .initialCapacity(100)
         .maximumSize(500)
-        .expireAfterWrite(Duration.ofMinutes(5));
+        .expireAfterWrite(Duration.ofMinutes(30));
   }
 }
