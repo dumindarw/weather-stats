@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class WeatherStatsApplicationTests {
+class WeatherStatsServiceTests {
 
   @Mock
   private WeatherStatsService weatherStatsService;
